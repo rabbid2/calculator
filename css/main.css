@@ -4,7 +4,7 @@
 }
 .grid{
     display: grid;
-    grid-template-areas: 'en en en en'
+    grid-template-areas: 'm m en en'
                          'n1 n2 n3 o0'
                          'n4 n5 n6 o1'
                          'n7 n8 n9 o2'

@@ -11,6 +11,8 @@ function createInterface() {
     for (let i = 0; i < operators.length; i++) createElem(`button`, [`operation${i}`], `${operators[i]}`, i);
     createElem(`button`, [`e`], `e`, ``);
     createElem(`button`, [`enter`], `=`, `n`);
+    let message = createElem(`div`, [`message`], ``);
+    message.setAttribute(`style`, `grid-area: m`);
 }
 
 function createElem(elem, classNames, text, index) {
