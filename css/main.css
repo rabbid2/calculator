@@ -1,17 +1,107 @@
-
+body{
+    background-color: #323c4e;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .calculator{
-    width: 700px;
+    position: relative;
+    grid-area: calculator;
+    background-color: snow;
+    width: 800px;
+    height: 700px;
 }
 .grid{
     display: grid;
-    grid-template-areas: 'm m en en'
+    grid-template-areas: 't t t t'
+                         'i i i i'
+                         'm m m en'
                          'n1 n2 n3 o0'
                          'n4 n5 n6 o1'
                          'n7 n8 n9 o2'
-                         'n0 e o3 o4';
+                         'n0 e d o3'
+                         'bo bc pi o4';
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1.5fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 0.1fr 2fr 1.5fr 1fr 1fr 1fr 1fr 1fr;
+    grid-row-gap: 5px;
+    grid-column-gap: 2px;
 }
-.textField{
-    width: 700px;
+
+button, .title, .textField, .message, .info1, .info2 {
+    font-family: "Roboto", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    border: 0;
+    border-bottom: 5px solid #fb8e7e;
+    color: #242735;
+    letter-spacing: .05em;
+}
+
+.title{
+    grid-area: t;
+    text-align: center;
+    padding-bottom: 20px;
+    background-color: #323c4e;
+    color: snow;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: .5em;
+}
+button{
+    background-color: #8ec9bb;
+}
+
+.textField {
+    background-color: #c5d7c0;
+    padding: 20px;
+    width: 100%;
+    border: 0;
+
+}
+.message {
+    padding: 20px;
+    background-color: #fb8e7e;
+    color: snow;
+}
+
+.info1, .info2{
+    padding: 20px;
+    border: 0;
+    transition: all .6s ease;
+    background-color: snow;
+    width: 5.21vw;
+    height: 5.21vw;
+    font-size: 0.9vw;
+    text-align: center;
+    color: #fb8e7e;
+}
+.info1{
+    position: absolute;
+    top: 351px;
+    left: -5.21vw;
+}
+.info2{
+    position: absolute;
+    top: 351px;
+    right: -5.21vw;
+}
+
+.show1, .show2{
+    height: 656px;
+    width: 15.625vw;
+    border-top: 5px solid #fb8e7e;
+    color: #323c4e;
+    text-align: left;
+}
+.show1 {
+    top: 44px;
+    left: -15.625vw;
+}
+
+.show2 {
+    top: 44px;
+    right: -15.625vw;
+}
+.error {
+    border: 5px solid #fa6e4f;
 }

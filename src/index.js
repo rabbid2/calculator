@@ -1,41 +1,17 @@
 const operators = [`^`,`*`,`/`,`+`,`-`];
+const MAX_VALUE = 1e+300;
+const MIN_VALUE = -1e-300;
+const PI = Math.PI;
+
 createInterface();
-
-
-function createInterface() {
-    let input = createElem(`input`, [`textField`], ``);
-    input.addEventListener(`keydown`, enter);
-    input.addEventListener(`keyup`, checkInput);
-    createElem(`div`, [`buttons`, `grid`], ``);
-    for (let i = 0; i < 10; i++) createElem(`button`, [`number${i}`], `${i}`, i);
-    for (let i = 0; i < operators.length; i++) createElem(`button`, [`operation${i}`], `${operators[i]}`, i);
-    createElem(`button`, [`e`], `e`, ``);
-    createElem(`button`, [`enter`], `=`, `n`);
-    let message = createElem(`div`, [`message`], ``);
-    message.setAttribute(`style`, `grid-area: m`);
-}
-
-function createElem(elem, classNames, text, index) {
-    let item = document.createElement(elem);
-    classNames.forEach( className => item.classList.add(className));
-    item.textContent = text;
-    if (elem === `button`) {
-        item.setAttribute(`style`, `grid-area: ${classNames[0][0] + index}`);
-        if (text === `=`) item.addEventListener(`click`, enter);
-        else item.addEventListener(`click`, checkInput);
-        document.querySelector(`.buttons`).appendChild(item);
-    }
-    else document.querySelector(`.calculator`).appendChild(item);
-
-    return item;
-}
 
 function checkInput(e) {
     symbolArray = getInput().split(``);
     if (this.textContent) symbolArray.push(this.textContent);
     let lastCoupleSymbols = getLastСoupleSymbols(symbolArray);
-
-    if (!checkLastSymbol(lastCoupleSymbols[0], lastCoupleSymbols[1])) symbolArray.pop();
+    
+    if (lastCoupleSymbols[0] === `.` && !checkDot(symbolArray)) symbolArray.pop();
+    else if (!checkLastSymbol(lastCoupleSymbols[0], lastCoupleSymbols[1])) symbolArray.pop();
 
     setInput(symbolArray.join(``));
 }
@@ -63,48 +39,63 @@ function setInput(text) {
     textField.focus();
 }
 
-function checkLastSymbol(currentSymbol, previousSymbol) {
-    if (currentSymbol === `.`) return checkDot();
+function setMessage(text) {
+    let messageField = document.querySelector(`.message`);
+    messageField.textContent = text;
+}
 
-    let regForFirstSymbol = /[\-\(\d]/;
-    let regForSymbol = /(^\d*$)|(^\d*[.\)\+\-\*\/\^e]?$)|(^[.\(\+\-\*\/\^]?\d*$)|(^\)?[\)\(\+\-\*\/\^]?$)|(^[\)\(\+\-\*\/\^]?\(?$)|(^e[\-\+]$)|(^\(\-$)|(^[\-\+]\-$)/;
-    
+function setError() {
+    let messageField = document.querySelector(`.message`);
+    messageField.classList.add(`error`);
+}
+function resetError(){
+    let messageField = document.querySelector(`.message`);
+    messageField.classList.remove(`error`);
+}
+
+function checkLastSymbol(currentSymbol, previousSymbol) {
+    let regForFirstSymbol = /[\-\(\d\π]/;
+    let regForSymbol = /(^(\d*|\π)$)|(^(\d*|\π)[.\)\+\-\*\/\^e]?$)|(^[.\(\+\-\*\/\^]?(\d*|\π)$)|(^\)?[\)\(\+\-\*\/\^]?$)|(^[\)\(\+\-\*\/\^]?\(?$)|(^e[\-\+]$)|(^\(\-$)|(^[\-\+]\-$)/;
+
     if (previousSymbol) return regForSymbol.test(previousSymbol+currentSymbol);
     else return regForFirstSymbol.test(currentSymbol);
 }
 
-function checkDot() {
-    let array = getInput().split(``);
-    let regForDot = /^\-?([\(\)]*[\-\+]?(\d+|\d+\.\d+|\d+\.?\d*e[\+\-]\d+)[\+\-\*\/\^\)][\)\(]*[\-\*\+\^]?)*\d+$/;
+function checkDot(array) {
+    let regForDot = /^\-?([\(\)]*[\-\+]?(\d+|\d+\.\d+|\d+\.?\d*e[\+\-]\d+|\π)[\+\-\*\/\^\)][\)\(]*[\-\*\+\^\/]?)*\d+$/;
     let newArr = array.concat();
     newArr.pop();
     let text = newArr.join(``);
-
     return regForDot.test(text);
 }
 
 function enter(e) {
-    if(e.type !== `click` && e.code !== `Enter`) return;
+    if(e.type !== `click` && e.code !== `Enter` && e.code !== `NumpadEnter`) return;
     let text = getInput();
-    
+    resetError();
+
     if (checkSpaces(text)) {
-        alert(`Удалите пробелы`);
+        setMessage(`Удалите пробелы`);
+        setError();
         return;
     }
-    if (checkString(text)) {
-        alert(`Неправильный ввод`);
+    else if (checkString(text)) {
+        setMessage(`Неправильный ввод`);
+        setError();
         return;
     }
-    if (!checkParentheses(text)) {
-        alert(`Не все скобки закрыты`);
+    else if (!checkParentheses(text)) {
+        setMessage(`Не все скобки закрыты`);
+        setError();
         return;
     }
+    else setMessage(text);
     let result = calculateFullExpression(text);
     setInput(result);
 }
 
 function checkString(text) {
-    let reg = /([^\d\+\-\*\/\^\.\)\(e]+|[\*\/\^\.e]{2})/;
+    let reg = /([^\d\+\-\*\/\^\.\)\(e\π]+|[\*\/\^\.e]{2}|\π{2,})/;
     return reg.test(text);
 }
 
@@ -124,6 +115,38 @@ function checkParentheses(text) {
     return countOpen === countClose;
 }
 
+function calculateFullExpression(input) {
+    let regForParentheses = /\([^\(\)]*\)/;
+    let singleExpressionResults = [];
+    input = addPi(input);
+    input = removeExcessOperators(input);
+
+    while (regForParentheses.test(input) || /.[\+\-\*\/\^]+./.test(input)){
+        let expression = input;
+        if (regForParentheses.test(input)) {
+            expression = input.match(regForParentheses)[0];
+        }
+        let newExpression = returnOperationsResults(expression, singleExpressionResults);
+        input = input.replace(expression, newExpression);
+        let result = calculate(newExpression);
+        if (result === ``) return ``;
+
+        singleExpressionResults.push(result);
+        input = input.replace(newExpression, `r${singleExpressionResults.length-1}`);
+        input = removeExcessOperators(input);
+    }
+
+    return returnOperationsResults(input, singleExpressionResults);
+}
+
+function addPi(text) {
+    let regForPi = /\π/;
+    while (regForPi.test(text)) {
+        text = text.replace(regForPi, PI);
+    }
+    return text;
+}
+
 function removeExcessOperators(text) {
     let regNeg = /(\+\-)|(\-\+)/;
     let regPos = /(\-\-)|(\+\+)/;
@@ -137,28 +160,6 @@ function removeExcessOperators(text) {
     }
 
     return text;
-}
-
-function calculateFullExpression(input) {
-    let regForParentheses = /\([^\(\)]*\)/;
-    let singleExpressionResults = [];
-    input = removeExcessOperators(input);
-
-    while (regForParentheses.test(input) || /.[\+\-\*\/\^]+./.test(input)){
-        let expression = input;
-        if (regForParentheses.test(input)) {
-            expression = input.match(regForParentheses)[0];
-        }
-        let newExpression = returnOperationsResults(expression, singleExpressionResults);
-        input = input.replace(expression, newExpression);
-        let result = calculate(newExpression);
-
-        singleExpressionResults.push(result);
-        input = input.replace(newExpression, `r${singleExpressionResults.length-1}`);
-        input = removeExcessOperators(input);
-    }
-
-    return returnOperationsResults(input, singleExpressionResults);
 }
 
 function findOperands(expression, operator) {
@@ -223,10 +224,11 @@ function calculate(expression) {
             result = operate(operator, Number(aSV), Number(bSV));
             expression = expression.replace(a + operator + b, result.toString());
             
-            if (!Number.isFinite(result)) {
-                if (operator === `/` && Number(b) === 0) alert(`Деление на 0`);
-                else alert(`Превышен лимит`);
-                return;
+            if (!checkResult(result, operator)) {
+                if (operator === `/` && Number(b) === 0) setMessage(`Деление на 0`);
+                else setMessage(`Превышен лимит`);
+                setError();
+                return ``;
             }
         }
     }
@@ -234,14 +236,18 @@ function calculate(expression) {
     if (isNaN(result)) return Number(a);
     return result;
 }
-  
+
+function checkResult(result) {
+    return (Number.isFinite(result) && result > MIN_VALUE && result < MAX_VALUE);
+}
+
 function returnSpecialValues(a, b, arr) {
     if (/[enp]+/.test(a) && a.length > 2) a = a.slice(1);
     if (/[enp]+/.test(b) && b.length > 2) b = b.slice(1);
     if (a && /[enp]/.test(a[0])) a = arr[a[1]];
     if (b && /[enp]/.test(b[0])) b = arr[b[1]];
 
-    return [a,b];
+    return [a, b];
 }
 
 function returnOperationsResults(expression, arr) {
@@ -285,23 +291,23 @@ function operate(operator, a, b) {
 }
 
 function add (a, b) {
-	return a + b;
+	return (a + b);
 }
 
 function subtract (a, b) {
-	return a - b;
+	return (a - b);
 }
 
 function multiply(a, b) {
-    return a * b;
+    return (a * b);
 }
 
 function division (a, b) {
-    return a / b;
+    return (a / b);
 }
 
 function power(a, b) {
-	return Math.pow(a, b);
+	return (Math.pow(a, b));
 }
 
 function factorial(a) {
@@ -313,3 +319,9 @@ function factorial(a) {
 	return result;
 }
 
+function round(value,decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+function expo(x, f) {
+    return Number.parseFloat(x).toExponential(f);
+}
