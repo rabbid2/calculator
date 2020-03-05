@@ -1,0 +1,17 @@
+
+.calculator{
+    width: 700px;
+}
+.grid{
+    display: grid;
+    grid-template-areas: 'en en en en'
+                         'n1 n2 n3 o0'
+                         'n4 n5 n6 o1'
+                         'n7 n8 n9 o2'
+                         'n0 e o3 o4';
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1.5fr 1fr 1fr 1fr 1fr;
+}
+.textField{
+    width: 700px;
+}
