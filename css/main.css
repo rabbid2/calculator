@@ -21,9 +21,10 @@ body{
                          'n4 n5 n6 o1'
                          'n7 n8 n9 o2'
                          'n0 e d o3'
-                         'bo bc pi o4';
+                         'bo bc pi o4'
+                         's c ex lg';
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 0.1fr 2fr 1.5fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 0.1fr 2fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-row-gap: 5px;
     grid-column-gap: 2px;
 }
@@ -32,7 +33,7 @@ button, .title, .textField, .message, .info1, .info2 {
     font-family: "Roboto", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 20px;
     border: 0;
-    border-bottom: 5px solid #fb8e7e;
+    border-bottom: 5px solid #6db6c5;
     color: #242735;
     letter-spacing: .05em;
 }
@@ -49,6 +50,15 @@ button, .title, .textField, .message, .info1, .info2 {
 }
 button{
     background-color: #8ec9bb;
+    font-size: 18px;
+    transition: all .07s ease;
+    
+}
+button:hover{
+    transform: rotate(5deg);
+}
+.operations{
+    background-color: #6db6c5;
 }
 
 .textField {
@@ -59,13 +69,18 @@ button{
 
 }
 .message {
+    width: 100%;
     padding: 20px;
     background-color: #fb8e7e;
     color: snow;
+    overflow: scroll;
+    font-size: 16px;
+    
 }
 
+
 .info1, .info2{
-    padding: 20px;
+    padding: 32px 10px;
     border: 0;
     transition: all .6s ease;
     background-color: snow;
@@ -74,6 +89,10 @@ button{
     font-size: 0.9vw;
     text-align: center;
     color: #fb8e7e;
+    line-height: 1.5vw;
+}
+.info1:hover,.info2:hover{
+    transform: rotate(5deg);
 }
 .info1{
     position: absolute;
@@ -92,6 +111,11 @@ button{
     border-top: 5px solid #fb8e7e;
     color: #323c4e;
     text-align: left;
+    padding: 30px;
+
+}
+.show1:hover, .show2:hover{
+    rotate: (3deg);
 }
 .show1 {
     top: 44px;
@@ -105,3 +129,4 @@ button{
 .error {
     border: 5px solid #fa6e4f;
 }
+

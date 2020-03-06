@@ -4,14 +4,15 @@ const MIN_VALUE = -1e-300;
 const PI = Math.PI;
 
 createInterface();
+console.log(exp(-1));
 
 function checkInput(e) {
     symbolArray = getInput().split(``);
     if (this.textContent) symbolArray.push(this.textContent);
-    let lastCoupleSymbols = getLastСoupleSymbols(symbolArray);
-    
-    if (lastCoupleSymbols[0] === `.` && !checkDot(symbolArray)) symbolArray.pop();
-    else if (!checkLastSymbol(lastCoupleSymbols[0], lastCoupleSymbols[1])) symbolArray.pop();
+    let lastСoupleSymbols = getLastСoupleSymbols(symbolArray);  
+    let isDot = lastСoupleSymbols[0] === `.`;
+    // isDot && !checkDot(symbolArray) ||
+    if (!checkLastSymbol(lastСoupleSymbols[0],lastСoupleSymbols[1])) symbolArray.pop();
 
     setInput(symbolArray.join(``));
 }
@@ -26,81 +27,59 @@ function getLastСoupleSymbols(symbolArray) {
     return [currentSymbol, previousSymbol];
 }
 
-function getInput() {
-    let textField = document.querySelector(`.textField`);
-    let text = textField.value;
-
-    return text;
-}
-
-function setInput(text) {
-    let textField = document.querySelector(`.textField`);
-    if (text !== undefined) textField.value = text;
-    textField.focus();
-}
-
-function setMessage(text) {
-    let messageField = document.querySelector(`.message`);
-    messageField.textContent = text;
-}
-
-function setError() {
-    let messageField = document.querySelector(`.message`);
-    messageField.classList.add(`error`);
-}
-function resetError(){
-    let messageField = document.querySelector(`.message`);
-    messageField.classList.remove(`error`);
-}
-
 function checkLastSymbol(currentSymbol, previousSymbol) {
-    let regForFirstSymbol = /[\-\(\d\π]/;
-    let regForSymbol = /(^(\d*|\π)$)|(^(\d*|\π)[.\)\+\-\*\/\^e]?$)|(^[.\(\+\-\*\/\^]?(\d*|\π)$)|(^\)?[\)\(\+\-\*\/\^]?$)|(^[\)\(\+\-\*\/\^]?\(?$)|(^e[\-\+]$)|(^\(\-$)|(^[\-\+]\-$)/;
+    let regForFirstSymbol = /[\-\(\d\πpcsEl]/;
+    let regForSymbol = /(^\d*$)|(^\d\.?$)|(^\.?\d$)|(^[\d\πp][\)\+\-\*\/\^e]?$)|(^[\(\+\-\*\/\^]?[\d\πp]$)|(^\)[\)\(\+\-\*\/\^]?$)|(^[\)\(\+\-\*\/\^]?\($)|(^e[\-\+]?$)|(^\(\-$)|(^[\-\+]?\-$)|(^[snPg]?[\d\πp\(]?$)|(^co$)|(^os$)|(^si$)|(^in$)|(^EX$)|(^XP$)|(^lo$)|(^og$)|(^[\(\+\-\*\/\^]?[cslE]?$)/;
 
     if (previousSymbol) return regForSymbol.test(previousSymbol+currentSymbol);
     else return regForFirstSymbol.test(currentSymbol);
 }
 
-function checkDot(array) {
-    let regForDot = /^\-?([\(\)]*[\-\+]?(\d+|\d+\.\d+|\d+\.?\d*e[\+\-]\d+|\π)[\+\-\*\/\^\)][\)\(]*[\-\*\+\^\/]?)*\d+$/;
-    let newArr = array.concat();
-    newArr.pop();
-    let text = newArr.join(``);
-    return regForDot.test(text);
-}
+// function checkDot(array) {
+//     let regForDot = /^\-?([sincoslgEXP]*([\(\)]*[\-\+]?(\d+|\d+\.\d+|\d+\.?\d*e[\+\-]\d+|\πp)[\+\-\*\/\^\)][sincoslgEXP]*[\)\(]*[\-\*\+\^\/]?))*\d+$/;
+//     let newArr = array.concat();
+//     newArr.pop();
+//     let text = newArr.join(``);
+//     return regForDot.test(text);
+// }
 
 function enter(e) {
     if(e.type !== `click` && e.code !== `Enter` && e.code !== `NumpadEnter`) return;
-    let text = getInput();
+    let expression = getInput();
     resetError();
+    if (!checkFullExpression(expression)) return;
 
-    if (checkSpaces(text)) {
-        setMessage(`Удалите пробелы`);
-        setError();
-        return;
-    }
-    else if (checkString(text)) {
-        setMessage(`Неправильный ввод`);
-        setError();
-        return;
-    }
-    else if (!checkParentheses(text)) {
-        setMessage(`Не все скобки закрыты`);
-        setError();
-        return;
-    }
-    else setMessage(text);
-    let result = calculateFullExpression(text);
+    let result = calculateFullExpression(expression);
     setInput(result);
 }
 
+function checkFullExpression(expression){ 
+    let errorMessage=``;
+    if (!checkSpaces(expression)) errorMessage =`Удалите пробелы`;
+    else if (!checkDot(expression)) errorMessage = `Неправильно поставлена точка`;
+    else if (!checkString(expression)) errorMessage=`Неправильный ввод`;
+    else if (!checkParentheses(expression)) errorMessage=`Не все скобки закрыты`;
+
+    if(errorMessage) { 
+        setError(errorMessage);
+        return false;
+    }
+    setMessage(expression);
+    return true;
+}
+
+function checkDot(text) {
+    let reg = /(\d*\.+\d*\.+)|([\(\)cosineπpEXPlg\^\*\/\+\-]\.)|(\.[\(\)cosineπpEXPlg\^\*\/\+\-])/;
+    return !reg.test(text);
+}
+
 function checkString(text) {
-    let reg = /([^\d\+\-\*\/\^\.\)\(e\π]+|[\*\/\^\.e]{2}|\π{2,})/;
-    return reg.test(text);
+    let reg = /([^\d\+\-\*\/\^\.\)\(e\πpcosinEXPlg]+|[\*\/\^\.e]{2}|[\πpcsnEPlg]{2,}|[oi]{2,})|[a-zA-Z]{4,}/;
+    return !reg.test(text);
 }
 
 function checkSpaces(text) {
-    return /\s/.test(text);
+    return !(/\s/.test(text));
 }
 
 function checkParentheses(text) {
@@ -118,18 +97,32 @@ function checkParentheses(text) {
 function calculateFullExpression(input) {
     let regForParentheses = /\([^\(\)]*\)/;
     let singleExpressionResults = [];
+    let mathFunction=``;
+    let indexExpression=0;
     input = addPi(input);
     input = removeExcessOperators(input);
 
     while (regForParentheses.test(input) || /.[\+\-\*\/\^]+./.test(input)){
         let expression = input;
         if (regForParentheses.test(input)) {
+            indexExpression = input.search(regForParentheses);
             expression = input.match(regForParentheses)[0];
+            if (input[indexExpression-1] && /[nsgPg]/.test(input[indexExpression-1])) {
+                mathFunction=input[indexExpression-1];
+            }
         }
         let newExpression = returnOperationsResults(expression, singleExpressionResults);
         input = input.replace(expression, newExpression);
         let result = calculate(newExpression);
-        if (result === ``) return ``;
+
+        if (mathFunction) {
+            result=getMathFunc(result,mathFunction);
+            newExpression = addMathFunction(input, indexExpression, newExpression);
+            mathFunction=``;
+            indexExpression=0;
+        }
+        if (result === ``) return input;
+
 
         singleExpressionResults.push(result);
         input = input.replace(newExpression, `r${singleExpressionResults.length-1}`);
@@ -139,8 +132,22 @@ function calculateFullExpression(input) {
     return returnOperationsResults(input, singleExpressionResults);
 }
 
+function addMathFunction(input, index, newExpression){
+    newExpression = input.substr(index-3,3)+newExpression;
+    return newExpression;
+}
+
+function getMathFunc(value,mathFunction){
+    switch (mathFunction){
+        case `n`: return sin(value);
+        case `s`: return cos(value);
+        case `P`: return exp(value);
+        case `g`: return log(value);
+    }
+}
+
 function addPi(text) {
-    let regForPi = /\π/;
+    let regForPi = /[\πp]/;
     while (regForPi.test(text)) {
         text = text.replace(regForPi, PI);
     }
@@ -201,7 +208,8 @@ function calculate(expression) {
     let result = 0;
     let param = [];
     let specialValues = [];
-  
+    if (!(/[\+\-\*\/\^]/.test(expression))) return getSingleValue(expression);
+
     for (let operator of operators) {
         while (expression.includes(operator)) {
             param = findSpecialValues(specialValues, expression);
@@ -225,9 +233,8 @@ function calculate(expression) {
             expression = expression.replace(a + operator + b, result.toString());
             
             if (!checkResult(result, operator)) {
-                if (operator === `/` && Number(b) === 0) setMessage(`Деление на 0`);
-                else setMessage(`Превышен лимит`);
-                setError();
+                if (operator === `/` && Number(b) === 0) setError(`Деление на 0`);
+                else setError(`Выход за пределы числового диапазона`);
                 return ``;
             }
         }
@@ -237,8 +244,13 @@ function calculate(expression) {
     return result;
 }
 
+function getSingleValue(expression){
+    let value = +(expression.slice(1,expression.length-1));
+    return value;
+}
+
 function checkResult(result) {
-    return (Number.isFinite(result) && result > MIN_VALUE && result < MAX_VALUE);
+    return (!Number.isNaN(result) && Number.isFinite(result) && result*(-1) < MAX_VALUE && result < MAX_VALUE);
 }
 
 function returnSpecialValues(a, b, arr) {
@@ -291,23 +303,23 @@ function operate(operator, a, b) {
 }
 
 function add (a, b) {
-	return (a + b);
+	return round(a + b);
 }
 
 function subtract (a, b) {
-	return (a - b);
+	return round(a - b);
 }
 
 function multiply(a, b) {
-    return (a * b);
+    return round(a * b);
 }
 
 function division (a, b) {
-    return (a / b);
+    return round(a / b);
 }
 
 function power(a, b) {
-	return (Math.pow(a, b));
+	return round(Math.pow(a, b));
 }
 
 function factorial(a) {
@@ -319,9 +331,22 @@ function factorial(a) {
 	return result;
 }
 
-function round(value,decimals) {
-    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+function cos(rad) {
+    return round(Math.cos(rad));
 }
-function expo(x, f) {
-    return Number.parseFloat(x).toExponential(f);
+
+function sin(rad) {
+    return round(Math.sin(rad));
+}
+
+function exp(a) {
+    return round(Math.exp(a));
+}
+
+function log(a) {
+    return round(Math.log(a));
+}
+
+function round(num){
+    return +(num.toFixed(14));
 }
