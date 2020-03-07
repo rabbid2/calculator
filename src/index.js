@@ -1,18 +1,22 @@
 const operators = [`^`,`*`,`/`,`+`,`-`];
 const MAX_VALUE = 1e+300;
-const MIN_VALUE = -1e-300;
+const MIN_VALUE = -MAX_VALUE;
 const PI = Math.PI;
 
 createInterface();
-console.log(exp(-1));
 
+//Этот фрагмент кода содержит проверку последнего введенного символа по событию `keyup`.
+
+//Функция содержит две проверки для символа: если это точка, то проверяется вся введенная строка, 
+//если нет, то проверяются только комбинации последнего символа с предыдущим.
+//Если проверка не проходит, то символ удаляется из строки. В результате строка возвращается в поле ввода.
 function checkInput(e) {
     symbolArray = getInput().split(``);
     if (this.textContent) symbolArray.push(this.textContent);
     let lastСoupleSymbols = getLastСoupleSymbols(symbolArray);  
     let isDot = lastСoupleSymbols[0] === `.`;
-    // isDot && !checkDot(symbolArray) ||
-    if (!checkLastSymbol(lastСoupleSymbols[0],lastСoupleSymbols[1])) symbolArray.pop();
+
+    if (isDot && !checkDot(symbolArray) || !checkLastSymbol(lastСoupleSymbols[0],lastСoupleSymbols[1])) symbolArray.pop();
 
     setInput(symbolArray.join(``));
 }
@@ -27,22 +31,26 @@ function getLastСoupleSymbols(symbolArray) {
     return [currentSymbol, previousSymbol];
 }
 
+//Функция с помощью регулярного выражения проверяет последние два символа на соответствие допустимым комбинациям. 
+//Если введенный символ первый, то проверяется регулярное выражение для начала строки.
 function checkLastSymbol(currentSymbol, previousSymbol) {
     let regForFirstSymbol = /[\-\(\d\πpcsEl]/;
-    let regForSymbol = /(^\d*$)|(^\d\.?$)|(^\.?\d$)|(^[\d\πp][\)\+\-\*\/\^e]?$)|(^[\(\+\-\*\/\^]?[\d\πp]$)|(^\)[\)\(\+\-\*\/\^]?$)|(^[\)\(\+\-\*\/\^]?\($)|(^e[\-\+]?$)|(^\(\-$)|(^[\-\+]?\-$)|(^[snPg]?[\d\πp\(]?$)|(^co$)|(^os$)|(^si$)|(^in$)|(^EX$)|(^XP$)|(^lo$)|(^og$)|(^[\(\+\-\*\/\^]?[cslE]?$)/;
-
+    let regForSymbol = /(^\d*$)|(^\d\.$)|(^\.\d$)|(^[\d\πp][\)\+\-\*\/\^e]$)|(^[\(\+\-\*\/\^][\d\πp]$)|(^\)[\)\+\-\*\/\^]$)|(^[\(\+\-\*\/\^Psng]\($)|(^e[\-\+]$)|(^\(\-$)|(^[\-\+]\-$)|(^[snPg][\d\πp\(]$)|(^co$)|(^os$)|(^si$)|(^in$)|(^EX$)|(^XP$)|(^lo$)|(^og$)|(^[\(\+\-\*\/\^][cslE]$)/;
     if (previousSymbol) return regForSymbol.test(previousSymbol+currentSymbol);
     else return regForFirstSymbol.test(currentSymbol);
 }
 
-// function checkDot(array) {
-//     let regForDot = /^\-?([sincoslgEXP]*([\(\)]*[\-\+]?(\d+|\d+\.\d+|\d+\.?\d*e[\+\-]\d+|\πp)[\+\-\*\/\^\)][sincoslgEXP]*[\)\(]*[\-\*\+\^\/]?))*\d+$/;
-//     let newArr = array.concat();
-//     newArr.pop();
-//     let text = newArr.join(``);
-//     return regForDot.test(text);
-// }
+//Функция проверяет строку до введенной точки
+function checkDot(array) {
+     let regForDot = /^(\(?-?[\(cosinEXPlg\+\-]*(\d+\.?\d*|\d+\.?\d*e[\+\-]\d+|[\πp])[\)\+\-\*\/\^]+)*\)*\d+$/
+     let newArr = array.concat();
+     newArr.pop();
+     let text = newArr.join(``);
+     return regForDot.test(text);
+ }
 
+//Этот фрагмент кода содержит общую проверку введенной строки по событиям `keydown` на клавише Enter и `click` на кнопке `=`.
+//После проверок ищется результат введенного выражения, который возвращается в поле ввода.
 function enter(e) {
     if(e.type !== `click` && e.code !== `Enter` && e.code !== `NumpadEnter`) return;
     let expression = getInput();
@@ -53,10 +61,11 @@ function enter(e) {
     setInput(result);
 }
 
+//Этот фрагмент кода содержит серию проверок на на пробелы, точки, круглые скобки, повторяющиеся и неподдерживаемые расчетами символы
 function checkFullExpression(expression){ 
     let errorMessage=``;
     if (!checkSpaces(expression)) errorMessage =`Удалите пробелы`;
-    else if (!checkDot(expression)) errorMessage = `Неправильно поставлена точка`;
+    else if (!checkDots(expression)) errorMessage = `Неправильно поставлена точка`;
     else if (!checkString(expression)) errorMessage=`Неправильный ввод`;
     else if (!checkParentheses(expression)) errorMessage=`Не все скобки закрыты`;
 
@@ -68,8 +77,8 @@ function checkFullExpression(expression){
     return true;
 }
 
-function checkDot(text) {
-    let reg = /(\d*\.+\d*\.+)|([\(\)cosineπpEXPlg\^\*\/\+\-]\.)|(\.[\(\)cosineπpEXPlg\^\*\/\+\-])/;
+function checkDots(text) {
+    let reg = /(\d*\.+\d*\.+)|([\(\)cosine\πpEXPlg\^\*\/\+\-]\.)|(\.[\(\)cosine\πpEXPlg\^\*\/\+\-])/;
     return !reg.test(text);
 }
 
@@ -94,6 +103,13 @@ function checkParentheses(text) {
     return countOpen === countClose;
 }
 
+//Этот фрагмент кода содержит расчет полного введенного выражения. Разделить на маленькие функции не удалось :(
+//Функция вставляет значения числа пи, удаляет лишние операторы, после чего с помощью цикла считает каждое выражение в скобках(если они есть).
+//Перед расчетом скобочного выражения запоминается его индекс и проверяется, была ли перед скобками математическая функция. Если да, то она сохраняется.
+//После вычисления выражения в скобках, применяется вычисление математической функции(если она есть) для результата. 
+//Результат сохраняется в массив, а в строке полного выражения скобочное выражение заменяется словом r{index}.
+//Индекс соответствует индексу в массиве. При следующей итерации, если в выражении находится слово r{index}, то на его место возвращается результат из массива по индексу.
+//...Функция возвращает число во всех случаях, кроме случая появления ошибок при расчете выражения.
 function calculateFullExpression(input) {
     let regForParentheses = /\([^\(\)]*\)/;
     let singleExpressionResults = [];
@@ -132,11 +148,12 @@ function calculateFullExpression(input) {
     return returnOperationsResults(input, singleExpressionResults);
 }
 
+//Таким нехитрым образом к строке скобочного выражения добавляется слово математической функции
 function addMathFunction(input, index, newExpression){
     newExpression = input.substr(index-3,3)+newExpression;
     return newExpression;
 }
-
+//Математическая функция определяется буквой перед скобкой, т.е. окончанием. По нему вызывается сама функция.
 function getMathFunc(value,mathFunction){
     switch (mathFunction){
         case `n`: return sin(value);
@@ -153,7 +170,8 @@ function addPi(text) {
     }
     return text;
 }
-
+//Функция удаления лишних операторов преобразует двойные операторы (++ +- --) в один (+ - -), 
+//удаляется "+" в начале строки, в начале скобочного выражения и перед любым оператором.
 function removeExcessOperators(text) {
     let regNeg = /(\+\-)|(\-\+)/;
     let regPos = /(\-\-)|(\+\+)/;
@@ -169,6 +187,73 @@ function removeExcessOperators(text) {
     return text;
 }
 
+function returnOperationsResults(expression, arr) {
+    while (/r/.test(expression)) {
+        let index = expression[expression.indexOf(`r`) + 1];
+        expression = expression.replace(`r${index}`, arr[index]);
+    }
+
+    return removeExcessOperators(expression);
+}
+
+//Функция расчета выражения. Выражением считается любая последователньость, которая может быть и не быть заключена в скобки.
+//В скобках может находиться простое число, поэтому добавлена проверка на отсутствие операторов.
+//С помощью цикла перебора массива имеющихся операторов и цикла нахождения операторов в выражении, 
+//осуществляется поиск двух операндов и оператора, имеющего наивысший приоритет.
+//Перед поиском операции ищутся специальные значения, имеющие оператор, который не должен использоваться в бинарных операциях.
+//Это числа с отрицательным знаком и в экспоненциальной форме. (-1, 1e+1). Они помещаются в массив и заменяются в выражении словами n{index}/e{index}, 
+//где индекс это их номер в массиве. Если один из операндов будет состоять из такого слова, то его значение достается из массива и участвует в расчете операции.
+//Циклы прерываются в 2х случаях - если закончились операторы в выражении, либо если последний оператор это отрицательный знак.
+//Результат каждой операции возвращается в выражение. При каждом расчете результата производится его проверка на конечность, NaN и соответствие диапазону.
+//При ошибке функция возвращает пустую строку, иначе число.
+function calculate(expression) {
+    let a = ``;
+    let b = ``;
+    let result = 0;
+    let param = [];
+    let specialValues = [];
+    if (!(/[\+\-\*\/\^]/.test(expression))) return getSingleValue(expression);
+
+    for (let operator of operators) {
+        while (expression.includes(operator)) {
+            param = findSpecialValues(specialValues, expression);
+            specialValues = param[0];
+            expression = param[1];
+
+            let operands = findOperands(expression, operator);
+            a = operands[0];
+            b = operands[1];
+            let highestPriorityOperator = operands[2];
+
+            operands = returnSpecialValues(a, b, specialValues);
+            let aSV = operands[0];
+            let bSV = operands[1];
+            if (!a) {
+                result = bSV;
+                return result;
+            }
+
+            result = operate(highestPriorityOperator, Number(aSV), Number(bSV));
+            expression = expression.replace(a + highestPriorityOperator + b, result.toString());
+            
+            if (!checkResult(result, highestPriorityOperator)) {
+                if (highestPriorityOperator === `/` && Number(b) === 0) setError(`Деление на 0`);
+                else setError(`Выход за пределы числового диапазона`);
+                return ``;
+            }
+        }
+    }
+
+    if (isNaN(result)) return Number(a);
+    return result;
+}
+
+//Функция ищет операнды. Одним из аргументов является оператор.
+//Приоритет начального оператора зависит от расположения в массиве.
+//Однако операторы (+,-) имеют одинаковый приоритет, в таком случае необходимо считать выражение слева направо.
+//Для учета этого вызывается функция findOperatorIndex, которая возвращает первый индекс нахождения оператора с приоритетом начального оператора.
+//Далее находятся операнды с помощью циклов двигающихся от оператора в разные стороны до другого оператора, скобки или конца строки.
+//Возвращаются операнды и оператор.
 function findOperands(expression, operator) {
     let a = ``;
     let b = ``;
@@ -196,52 +281,11 @@ function findOperatorIndex(expression, operator) {
     let regAddSub = /[\+\-]/;
     let indexOfOperator = 0;
     indexOfOperator = expression.indexOf(operator);
+    if( operator===`^` ) return indexOfOperator;
     if (regMultDiv.test(operator) || regMultDiv.test(expression)) indexOfOperator = expression.search(regMultDiv);
     else if (regAddSub.test(operator)) indexOfOperator = expression.search(regAddSub);
     
     return indexOfOperator;
-}
-  
-function calculate(expression) {
-    let a = ``;
-    let b = ``;
-    let result = 0;
-    let param = [];
-    let specialValues = [];
-    if (!(/[\+\-\*\/\^]/.test(expression))) return getSingleValue(expression);
-
-    for (let operator of operators) {
-        while (expression.includes(operator)) {
-            param = findSpecialValues(specialValues, expression);
-            specialValues = param[0];
-            expression = param[1];
-
-            let operands = findOperands(expression, operator);
-            a = operands[0];
-            b = operands[1];
-            operator = operands[2];
-
-            operands = returnSpecialValues(a, b, specialValues);
-            let aSV = operands[0];
-            let bSV = operands[1];
-            if (!a) {
-                result = bSV;
-                return result;
-            }
-
-            result = operate(operator, Number(aSV), Number(bSV));
-            expression = expression.replace(a + operator + b, result.toString());
-            
-            if (!checkResult(result, operator)) {
-                if (operator === `/` && Number(b) === 0) setError(`Деление на 0`);
-                else setError(`Выход за пределы числового диапазона`);
-                return ``;
-            }
-        }
-    }
-
-    if (isNaN(result)) return Number(a);
-    return result;
 }
 
 function getSingleValue(expression){
@@ -250,7 +294,11 @@ function getSingleValue(expression){
 }
 
 function checkResult(result) {
-    return (!Number.isNaN(result) && Number.isFinite(result) && result*(-1) < MAX_VALUE && result < MAX_VALUE);
+    return (!Number.isNaN(result) && Number.isFinite(result) &&  result > MIN_VALUE && result < MAX_VALUE);
+}
+
+function checkValue(text){
+    return /(^-?\d+\.?\d*$)|(^-?\d+\.?e[+-]\d+$)/.test(text);
 }
 
 function returnSpecialValues(a, b, arr) {
@@ -262,15 +310,8 @@ function returnSpecialValues(a, b, arr) {
     return [a, b];
 }
 
-function returnOperationsResults(expression, arr) {
-    while (/r/.test(expression)) {
-        let index = expression[expression.indexOf(`r`) + 1];
-        expression = expression.replace(`r${index}`, arr[index]);
-    }
-
-    return removeExcessOperators(expression);
-}
-  
+//Функция поиска значений с отрицательным знаком и в экспоненциальной форме. Заменяет их на слова n{index}, e{index}.
+//Возвращается массив значений и обновленное выражение.
 function findSpecialValues(arr, expression) {
     let regForExp = /\d+\.?\d*e[\+\-]\d+/;
     let regForNegative = /(^\-\d+\.?\d*e[\+\-]\d+)|(^\-\d+\.?\d*)|([\(\+\-\*\/\^]\-\d+\.?\d*e[\+\-]\d+)|([\(\+\-\*\/\^]\-\d+\.?\d*)/;
@@ -320,15 +361,6 @@ function division (a, b) {
 
 function power(a, b) {
 	return round(Math.pow(a, b));
-}
-
-function factorial(a) {
-	let result = 1;
-	for(let i = 1; i <= a; i++) {
-		result *= i;
-    }
-    
-	return result;
 }
 
 function cos(rad) {

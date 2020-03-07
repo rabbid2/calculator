@@ -24,18 +24,21 @@ body{
                          'bo bc pi o4'
                          's c ex lg';
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 0.1fr 2fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 0.1fr 2.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-row-gap: 5px;
-    grid-column-gap: 2px;
+    grid-column-gap: 3px;
 }
 
-button, .title, .textField, .message, .info1, .info2 {
+button, .title, .inputField, .message, .info1, .info2, .contacts, .feedback {
     font-family: "Roboto", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 20px;
     border: 0;
-    border-bottom: 5px solid #6db6c5;
+    border-bottom: 5px solid #fb8e7e;
     color: #242735;
     letter-spacing: .05em;
+}
+.title{
+    border-color: #6db6c5;
 }
 
 .title{
@@ -48,20 +51,22 @@ button, .title, .textField, .message, .info1, .info2 {
     text-transform: uppercase;
     letter-spacing: .5em;
 }
+/*#8ec9bb*/
 button{
-    background-color: #8ec9bb;
+    background-color: #a4dbe6;
     font-size: 18px;
     transition: all .07s ease;
     
 }
 button:hover{
     transform: rotate(5deg);
+    background-color: #fb8e7e;
 }
 .operations{
-    background-color: #6db6c5;
+    background-color: #7dc0ce;
 }
 
-.textField {
+.inputField {
     background-color: #c5d7c0;
     padding: 20px;
     width: 100%;
@@ -75,12 +80,14 @@ button:hover{
     color: snow;
     overflow: scroll;
     font-size: 16px;
+
+    border-top: 5px solid #6db6c5;
     
 }
 
 
 .info1, .info2{
-    padding: 32px 10px;
+    padding: 35px 20px;
     border: 0;
     transition: all .6s ease;
     background-color: snow;
@@ -90,34 +97,49 @@ button:hover{
     text-align: center;
     color: #fb8e7e;
     line-height: 1.5vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
 }
-.info1:hover,.info2:hover{
-    transform: rotate(5deg);
-}
+
 .info1{
     position: absolute;
     top: 351px;
     left: -5.21vw;
 }
+
+.info1:hover{
+    width: 10.42vw;
+    left: -10.42vw;
+}
+
 .info2{
     position: absolute;
     top: 351px;
     right: -5.21vw;
 }
+.info2:hover{
+    width: 10.42vw;
+    right: -10.42vw;
+}
 
 .show1, .show2{
     height: 656px;
     width: 15.625vw;
-    border-top: 5px solid #fb8e7e;
+    border-top: 5px solid #6db6c5;
+    border-bottom: 5px solid #fb8e7e;
     color: #323c4e;
     text-align: left;
-    padding: 30px;
+    padding: 20px 30px;
 
 }
-.show1:hover, .show2:hover{
-    rotate: (3deg);
-}
+
 .show1 {
+    top: 44px;
+    left: -15.625vw;
+}
+.show1:hover {
+    width: 15.625vw;
     top: 44px;
     left: -15.625vw;
 }
@@ -126,7 +148,84 @@ button:hover{
     top: 44px;
     right: -15.625vw;
 }
+
+.show2:hover {
+    width: 15.625vw;
+    top: 44px;
+    right: -15.625vw;
+}
 .error {
     border: 5px solid #fa6e4f;
 }
 
+.enter{
+    background-color: #fb8e7e;
+    border-top: 5px solid #6db6c5;
+}
+.enter:hover{
+    background-color: #6db6c5;
+}
+.clear, .return, .save{
+    background-color: #c5d7c0;
+    position: absolute;
+    top: 180px;
+    right: 0.26vw;
+    border: 0;
+    color: snow;
+    padding: 0 3px;
+    font-size: 0.94vw;
+}
+.return{
+    right: 3.06vw;
+    color: #fb8e7e;
+}
+
+.save{
+    right: 9.26vw;
+    color: #6db6c5;
+}
+.return:hover, .save:hover{
+    color: snow;
+}
+
+.feedback{
+    background-color: #c5d7c0;
+    border: 0;
+    padding: 10px;
+    font-size: 16px;
+    animation: spin 0.5s linear 0s infinite; 
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    transition: all 2s step-end;
+    display: none;
+}
+.start{
+    display: block;
+    top: 350px;
+    left: -350px;
+}
+
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+
+.contacts{
+    position: absolute;
+    width: 800px;
+    height: 100px;
+    bottom: -100px;
+    left: -200px;
+    text-align: center;
+    padding: 20px;
+    color: snow;
+    border: 0;
+
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: .5em;
+}
+p{
+    color: #7dc0ce;
+}
