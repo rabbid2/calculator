@@ -49,7 +49,7 @@ function checkDot(array) {
      return regForDot.test(text);
  }
 
-//Этот фрагмент кода содержит общую проверку введенной строки по событиям `keydown` на клавише Enter и `click` на кнопке `=`.
+//Следующий фрагмент кода содержит общую проверку введенной строки по событиям `keydown` на клавише Enter и `click` на кнопке `=`.
 //После проверок ищется результат введенного выражения, который возвращается в поле ввода.
 function enter(e) {
     if(e.type !== `click` && e.code !== `Enter` && e.code !== `NumpadEnter`) return;
@@ -61,7 +61,7 @@ function enter(e) {
     setInput(result);
 }
 
-//Этот фрагмент кода содержит серию проверок на на пробелы, точки, круглые скобки, повторяющиеся и неподдерживаемые расчетами символы
+//Следующий фрагмент кода содержит серию проверок на пробелы, точки, круглые скобки, повторяющиеся и неподдерживаемые расчетами символы
 function checkFullExpression(expression){ 
     let errorMessage=``;
     if (!checkSpaces(expression)) errorMessage =`Удалите пробелы`;
@@ -107,18 +107,16 @@ function checkParentheses(text) {
 //Функция вставляет значения числа пи, удаляет лишние операторы, после чего с помощью цикла считает каждое выражение в скобках(если они есть).
 //Перед расчетом скобочного выражения запоминается его индекс и проверяется, была ли перед скобками математическая функция. Если да, то она сохраняется.
 //После вычисления выражения в скобках, применяется вычисление математической функции(если она есть) для результата. 
-//Результат сохраняется в массив, а в строке полного выражения скобочное выражение заменяется словом r{index}.
-//Индекс соответствует индексу в массиве. При следующей итерации, если в выражении находится слово r{index}, то на его место возвращается результат из массива по индексу.
-//...Функция возвращает число во всех случаях, кроме случая появления ошибок при расчете выражения.
+//После получения результата, он вставляется во введенное выражение. Скобочное выражение заменяется на результат.
+//Функция возвращает число во всех случаях, кроме случая появления ошибок при расчете выражения.
 function calculateFullExpression(input) {
     let regForParentheses = /\([^\(\)]*\)/;
-    let singleExpressionResults = [];
     let mathFunction=``;
     let indexExpression=0;
     input = addPi(input);
     input = removeExcessOperators(input);
 
-    while (regForParentheses.test(input) || /.[\+\-\*\/\^]+./.test(input)){
+    while (regForParentheses.test(input) || /[^e][\+\-\*\/\^]+./.test(input)){
         let expression = input;
         if (regForParentheses.test(input)) {
             indexExpression = input.search(regForParentheses);
@@ -127,28 +125,24 @@ function calculateFullExpression(input) {
                 mathFunction=input[indexExpression-1];
             }
         }
-        let newExpression = returnOperationsResults(expression, singleExpressionResults);
-        input = input.replace(expression, newExpression);
-        let result = calculate(newExpression);
+        let result = calculate(expression);
 
         if (mathFunction) {
             result=getMathFunc(result,mathFunction);
-            newExpression = addMathFunction(input, indexExpression, newExpression);
+            expression = addMathFunction(input, indexExpression, expression);
             mathFunction=``;
             indexExpression=0;
         }
         if (result === ``) return input;
 
-
-        singleExpressionResults.push(result);
-        input = input.replace(newExpression, `r${singleExpressionResults.length-1}`);
+        input = input.replace(expression, result);
         input = removeExcessOperators(input);
     }
 
-    return returnOperationsResults(input, singleExpressionResults);
+    return input;
 }
 
-//Таким нехитрым образом к строке скобочного выражения добавляется слово математической функции
+//Таким нехитрым образом к строке скобочного выражения добавляется слово математической функции, состоящее из 3х символов.
 function addMathFunction(input, index, newExpression){
     newExpression = input.substr(index-3,3)+newExpression;
     return newExpression;
@@ -170,7 +164,7 @@ function addPi(text) {
     }
     return text;
 }
-//Функция удаления лишних операторов преобразует двойные операторы (++ +- --) в один (+ - -), 
+//Функция удаления лишних операторов преобразует двойной оператор (++ +- --) в один (+ - -), 
 //удаляется "+" в начале строки, в начале скобочного выражения и перед любым оператором.
 function removeExcessOperators(text) {
     let regNeg = /(\+\-)|(\-\+)/;
@@ -196,14 +190,14 @@ function returnOperationsResults(expression, arr) {
     return removeExcessOperators(expression);
 }
 
-//Функция расчета выражения. Выражением считается любая последователньость, которая может быть и не быть заключена в скобки.
+//Функция расчета выражения. Выражением считается любая последовательность, которая может быть и не быть заключена в скобки.
 //В скобках может находиться простое число, поэтому добавлена проверка на отсутствие операторов.
-//С помощью цикла перебора массива имеющихся операторов и цикла нахождения операторов в выражении, 
+//С помощью цикла перебора массива имеющихся операторов и цикла нахождения операторов в выражении 
 //осуществляется поиск двух операндов и оператора, имеющего наивысший приоритет.
 //Перед поиском операции ищутся специальные значения, имеющие оператор, который не должен использоваться в бинарных операциях.
-//Это числа с отрицательным знаком и в экспоненциальной форме. (-1, 1e+1). Они помещаются в массив и заменяются в выражении словами n{index}/e{index}, 
+//Это числа с отрицательным знаком и в экспоненциальной форме. (-1, 1e+1). Они сохраняются в массив и в выражении заменяются словами n{index}/e{index}, 
 //где индекс это их номер в массиве. Если один из операндов будет состоять из такого слова, то его значение достается из массива и участвует в расчете операции.
-//Циклы прерываются в 2х случаях - если закончились операторы в выражении, либо если последний оператор это отрицательный знак.
+//Циклы прерываются в 2х случаях - если закончились операторы в выражении, либо если последний оператор это специальное значение.
 //Результат каждой операции возвращается в выражение. При каждом расчете результата производится его проверка на конечность, NaN и соответствие диапазону.
 //При ошибке функция возвращает пустую строку, иначе число.
 function calculate(expression) {
@@ -301,11 +295,13 @@ function checkValue(text){
     return /(^-?\d+\.?\d*$)|(^-?\d+\.?e[+-]\d+$)/.test(text);
 }
 
+//Достает специальное значение из массива. Код значения состоит из 2х символов, если их больше, то захвачена скобка, тогда она удаляется.
+//Захватываться не должна, но удалять этот костыль не рискну.
 function returnSpecialValues(a, b, arr) {
-    if (/[enp]+/.test(a) && a.length > 2) a = a.slice(1);
-    if (/[enp]+/.test(b) && b.length > 2) b = b.slice(1);
-    if (a && /[enp]/.test(a[0])) a = arr[a[1]];
-    if (b && /[enp]/.test(b[0])) b = arr[b[1]];
+    if (/[en]+/.test(a) && a.length > 2) a = a.slice(1);
+    if (/[en]+/.test(b) && b.length > 2) b = b.slice(1);
+    if (a && /[en]/.test(a[0])) a = arr[a[1]];
+    if (b && /[en]/.test(b[0])) b = arr[b[1]];
 
     return [a, b];
 }
@@ -333,6 +329,7 @@ function findSpecialValues(arr, expression) {
     return [arr, expression]
 }
 
+//Далее идут функции расчета значений.
 function operate(operator, a, b) {
     switch(operator) {
         case `+`: return add(a, b);
