@@ -1,5 +1,5 @@
 let savedValue=``;
-
+//Здесь создаются все элементы интерфейса и находятся функции для управления ими.
 function createInterface() {
     let input = createElem(`input`, [`inputField`], `.calculator`, ``,``);
     input.addEventListener(`keydown`, enter);
@@ -113,7 +113,12 @@ function returnValue(e){
 }
 
 function sendFeedback(e){
-    let code = `Моя почта: elenatonkikh7@gmail.com`;
+    let code = `elenatonkikh7@gmail.com`;
     createElem(`div`,[`contacts`],`.calculator`,code,``);
 
+}
+
+
+function checkValue(text){
+    return /(^-?\d+\.?\d*$)|(^-?\d+\.?e[+-]\d+$)/.test(text);
 }

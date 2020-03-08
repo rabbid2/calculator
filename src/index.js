@@ -2,21 +2,29 @@ const operators = [`^`,`*`,`/`,`+`,`-`];
 const MAX_VALUE = 1e+300;
 const MIN_VALUE = -MAX_VALUE;
 const PI = Math.PI;
+let logBase = ``;
 
 createInterface();
 
-//Этот фрагмент кода содержит проверку последнего введенного символа по событию `keyup`.
+//Следующий фрагмент кода содержит проверку последнего введенного символа по событию `keyup`.
 
-//Функция содержит две проверки для символа: если это точка, то проверяется вся введенная строка, 
-//если нет, то проверяются только комбинации последнего символа с предыдущим.
+//Функция содержит проверку для кнопок матем. функций и три проверки для последнего символа: 
+//если это точка или основание для логарифма, то проверяется вся введенная строка, если нет, то проверяются только комбинации последнего символа с предыдущим.
 //Если проверка не проходит, то символ удаляется из строки. В результате строка возвращается в поле ввода.
 function checkInput(e) {
     symbolArray = getInput().split(``);
     if (this.textContent) symbolArray.push(this.textContent);
     let lastСoupleSymbols = getLastСoupleSymbols(symbolArray);  
-    let isDot = lastСoupleSymbols[0] === `.`;
+    let currentSymbol = lastСoupleSymbols[0];
+    let previousSymbol = lastСoupleSymbols[1];
 
-    if (isDot && !checkDot(symbolArray) || !checkLastSymbol(lastСoupleSymbols[0],lastСoupleSymbols[1])) symbolArray.pop();
+    let isDot = currentSymbol === `.`;
+    let isLog = (previousSymbol === `)` && (currentSymbol===`d` || currentSymbol === `n` || /\d/.test(currentSymbol)));
+    let isMathFunction = ( this.textContent === `EXP` || this.textContent === `log` || this.textContent === `cos` || this.textContent === `sin`);
+
+
+    if  (isMathFunction && previousSymbol && !(/[\(\+\-\*\/\^]/.test(previousSymbol)) || isLog && !checkLog() ||
+        isDot && !checkDot(symbolArray) || !isMathFunction && !isLog && !checkLastSymbol(currentSymbol,previousSymbol)) symbolArray.pop();
 
     setInput(symbolArray.join(``));
 }
@@ -35,14 +43,30 @@ function getLastСoupleSymbols(symbolArray) {
 //Если введенный символ первый, то проверяется регулярное выражение для начала строки.
 function checkLastSymbol(currentSymbol, previousSymbol) {
     let regForFirstSymbol = /[\-\(\d\πpcsEl]/;
-    let regForSymbol = /(^\d*$)|(^\d\.$)|(^\.\d$)|(^[\d\πp][\)\+\-\*\/\^e]$)|(^[\(\+\-\*\/\^][\d\πp]$)|(^\)[\)\+\-\*\/\^]$)|(^[\(\+\-\*\/\^Psng]\($)|(^e[\-\+]$)|(^\(\-$)|(^[\-\+]\-$)|(^[snPg][\d\πp\(]$)|(^co$)|(^os$)|(^si$)|(^in$)|(^EX$)|(^XP$)|(^lo$)|(^og$)|(^[\(\+\-\*\/\^][cslE]$)/;
+    let regForSymbol = /(^\d*$)|(^\d\.$)|(^\.\d$)|(^[\d\πp][\)\+\-\*\/\^e]$)|(^[\(\+\-\*\/\^][\d\πp]$)|(^\)[\)\+\-\*\/\^]$)|(^[\(\+\-\*\/\^Psng]\($)|(^e[\-\+]$)|(^\(\-$)|(^[\-\+]\-$)|(^[snP][\d\πp\(]$)|(^co$)|(^os$)|(^si$)|(^in$)|(^EX$)|(^XP$)|(^lo$)|(^og$)|(^[\(\+\-\*\/\^][cslE]$)|(^[dn][\+\-\*\/\^\)]$)/;
     if (previousSymbol) return regForSymbol.test(previousSymbol+currentSymbol);
     else return regForFirstSymbol.test(currentSymbol);
 }
 
-//Функция проверяет строку до введенной точки
+//Функция предназначена для проверки ввода основания логарифма после закрывающей скобки. 
+//Она проверяет всю строку на наличие функции логарифма перед открывающей скобкой соответствующей данной закрывающей.
+function checkLog(){
+    let input = getInput();
+    let countBkts=1;
+
+    for(let i=input.length-3; i>0; i--){
+        if(input[i] === `)`) countBkts++;
+        if(input[i] === `(`) {
+            countBkts--;
+            if(countBkts===0) return(input[i-1]===`g` && input[i-2]===`o` && input[i-3]===`l`);
+        }
+    }
+    return false;
+}
+
+//Функция проверяет строку до введенной точки.
 function checkDot(array) {
-     let regForDot = /^(\(?-?[\(cosinEXPlg\+\-]*(\d+\.?\d*|\d+\.?\d*e[\+\-]\d+|[\πp])[\)\+\-\*\/\^]+)*\)*\d+$/
+     let regForDot = /^(\(?-?[\(cosinEXPlg\+\-]*(\d+\.?\d*|\d+\.?\d*e[\+\-]\d+|[\πp])[\)\+\-\*\/\^]+)*\)*\d+$/;
      let newArr = array.concat();
      newArr.pop();
      let text = newArr.join(``);
@@ -61,7 +85,7 @@ function enter(e) {
     setInput(result);
 }
 
-//Следующий фрагмент кода содержит серию проверок на пробелы, точки, круглые скобки, повторяющиеся и неподдерживаемые расчетами символы
+//Следующий фрагмент кода содержит серию проверок на пробелы, точки, круглые скобки, повторяющиеся и неподдерживаемые расчетами символы.
 function checkFullExpression(expression){ 
     let errorMessage=``;
     if (!checkSpaces(expression)) errorMessage =`Удалите пробелы`;
@@ -78,12 +102,12 @@ function checkFullExpression(expression){
 }
 
 function checkDots(text) {
-    let reg = /(\d*\.+\d*\.+)|([\(\)cosine\πpEXPlg\^\*\/\+\-]\.)|(\.[\(\)cosine\πpEXPlg\^\*\/\+\-])/;
+    let reg = /(\d*\.+\d*\.+)|([\(\)cosine\πpEXPlgd\^\*\/\+\-]\.)|(\.[\(\)cosine\πpEXPlgd\^\*\/\+\-])/;
     return !reg.test(text);
 }
 
 function checkString(text) {
-    let reg = /([^\d\+\-\*\/\^\.\)\(e\πpcosinEXPlg]+|[\*\/\^\.e]{2}|[\πpcsnEPlg]{2,}|[oi]{2,})|[a-zA-Z]{4,}/;
+let reg = /([^\d\+\-\*\/\^\.\)\(e\πpcosinEXPlgd]+|[\*\/\^\.e]{2}|[\πpcsnEPlgd]{2,}|[oi]{2,})|[a-zA-Z]{4,}|log\(.*\)[\)\+\-\*\/\^\.]/;
     return !reg.test(text);
 }
 
@@ -104,10 +128,10 @@ function checkParentheses(text) {
 }
 
 //Этот фрагмент кода содержит расчет полного введенного выражения. Разделить на маленькие функции не удалось :(
-//Функция вставляет значения числа пи, удаляет лишние операторы, после чего с помощью цикла считает каждое выражение в скобках(если они есть).
+//Функция вставляет значения числа пи, удаляет лишние операторы, после чего в выражении ищутся отдельные выражения в скобках. Каждый такой фрагмент считается и 
+//результат возвращается в общее выражение на место скобочного выражения. Если скобок нет, то выражение считается 1 раз.
 //Перед расчетом скобочного выражения запоминается его индекс и проверяется, была ли перед скобками математическая функция. Если да, то она сохраняется.
-//После вычисления выражения в скобках, применяется вычисление математической функции(если она есть) для результата. 
-//После получения результата, он вставляется во введенное выражение. Скобочное выражение заменяется на результат.
+//После вычисления выражения в скобках, применяется вычисление математической функции(если она есть) для результата.
 //Функция возвращает число во всех случаях, кроме случая появления ошибок при расчете выражения.
 function calculateFullExpression(input) {
     let regForParentheses = /\([^\(\)]*\)/;
@@ -128,8 +152,9 @@ function calculateFullExpression(input) {
         let result = calculate(expression);
 
         if (mathFunction) {
-            result=getMathFunc(result,mathFunction);
             expression = addMathFunction(input, indexExpression, expression);
+            if (mathFunction===`g` && (!checkLogValue(result) || !checkLogBase())) return input;
+            result=getMathFunc(result,mathFunction);
             mathFunction=``;
             indexExpression=0;
         }
@@ -142,11 +167,21 @@ function calculateFullExpression(input) {
     return input;
 }
 
-//Таким нехитрым образом к строке скобочного выражения добавляется слово математической функции, состоящее из 3х символов.
-function addMathFunction(input, index, newExpression){
-    newExpression = input.substr(index-3,3)+newExpression;
-    return newExpression;
+//Таким нехитрым образом к строке скобочного выражения добавляется слово математической функции, состоящее из 3х символов. 
+//Если это логарифм, то добавляется его основание.
+function addMathFunction(input, index, expression){
+    let base=``;
+    if(input[index-1]===`g`){
+        for(let i=index+expression.length; i<input.length; i++){
+            if (operators.includes(input[i]) || input[i]===')') break;
+            else base+=input[i];
+        }
+    }
+    logBase=base;
+    expression = input.substr(index-3,3)+expression+base;
+    return expression;
 }
+
 //Математическая функция определяется буквой перед скобкой, т.е. окончанием. По нему вызывается сама функция.
 function getMathFunc(value,mathFunction){
     switch (mathFunction){
@@ -164,6 +199,23 @@ function addPi(text) {
     }
     return text;
 }
+//Функции с проверками основания и значения логарифма.
+function checkLogBase(){
+    if (logBase===`n` || logBase ===`d`) return true;
+    if (typeof(Number(logBase)) !== `number`) setError(`Неправильно ввведено основание логарифма`); 
+    else if (Number(logBase) < 0) setError(`Основание логарифма должно быть больше 0`);
+    else if (Number(logBase) === 1) setError(`Основание логарифма не должно быть равно 1`);
+    else if (logBase===``) setError(`Отсутствует основание у логарифма`);
+    else return true;
+    return false;
+}
+
+function checkLogValue(num){
+    if(num>0) return true;
+    setError(`Аргумент логарифма должен быть > 0`);
+    return false;
+}
+
 //Функция удаления лишних операторов преобразует двойной оператор (++ +- --) в один (+ - -), 
 //удаляется "+" в начале строки, в начале скобочного выражения и перед любым оператором.
 function removeExcessOperators(text) {
@@ -181,20 +233,10 @@ function removeExcessOperators(text) {
     return text;
 }
 
-function returnOperationsResults(expression, arr) {
-    while (/r/.test(expression)) {
-        let index = expression[expression.indexOf(`r`) + 1];
-        expression = expression.replace(`r${index}`, arr[index]);
-    }
-
-    return removeExcessOperators(expression);
-}
-
 //Функция расчета выражения. Выражением считается любая последовательность, которая может быть и не быть заключена в скобки.
 //В скобках может находиться простое число, поэтому добавлена проверка на отсутствие операторов.
-//С помощью цикла перебора массива имеющихся операторов и цикла нахождения операторов в выражении 
-//осуществляется поиск двух операндов и оператора, имеющего наивысший приоритет.
-//Перед поиском операции ищутся специальные значения, имеющие оператор, который не должен использоваться в бинарных операциях.
+//С помощью цикла перебора массива имеющихся операторов и цикла нахождения операторов в выражении осуществляется поиск двух операндов и оператора,
+//имеющего наивысший приоритет. Перед поиском операции ищутся специальные значения, которые имеют оператор, который не должен использоваться в бинарных операциях.
 //Это числа с отрицательным знаком и в экспоненциальной форме. (-1, 1e+1). Они сохраняются в массив и в выражении заменяются словами n{index}/e{index}, 
 //где индекс это их номер в массиве. Если один из операндов будет состоять из такого слова, то его значение достается из массива и участвует в расчете операции.
 //Циклы прерываются в 2х случаях - если закончились операторы в выражении, либо если последний оператор это специальное значение.
@@ -291,10 +333,6 @@ function checkResult(result) {
     return (!Number.isNaN(result) && Number.isFinite(result) &&  result > MIN_VALUE && result < MAX_VALUE);
 }
 
-function checkValue(text){
-    return /(^-?\d+\.?\d*$)|(^-?\d+\.?e[+-]\d+$)/.test(text);
-}
-
 //Достает специальное значение из массива. Код значения состоит из 2х символов, если их больше, то захвачена скобка, тогда она удаляется.
 //Захватываться не должна, но удалять этот костыль не рискну.
 function returnSpecialValues(a, b, arr) {
@@ -373,9 +411,23 @@ function exp(a) {
 }
 
 function log(a) {
-    return round(Math.log(a));
+    if (logBase === `n`) return round(Math.log(a));
+    if (logBase === `d`) return round(Math.log10(a));
+    return round(Math.log(a) / Math.log(logBase));
 }
 
+//Функции убирают неточности вещественных чисел.
 function round(num){
+    if (num.toString().includes(`e`)) return +(getValueFromExp(num).toFixed(14)+getExponentFromExp(num));
     return +(num.toFixed(14));
+}
+
+function getValueFromExp(num){
+    let reg=/^-?\d+\.?\d*/;
+    return +(num.toString().match(reg)[0]);
+}
+
+function getExponentFromExp(num){
+    let reg=/e[+-]\d+/;
+    return num.toString().match(reg)[0];
 }

@@ -1,15 +1,15 @@
 if (window.screen.availWidth > window.screen.availHeight) window.addEventListener(`DOMContentLoaded`, runWalkingBlock);
 
+//Отвлекающий квадрат
 function runWalkingBlock(e){
     let block = document.querySelector(`.feedback`);
     block.classList.add(`start`);
-    //setInterval(move,1000);
+    setInterval(move,1500);
 }
 
 function move(){
     let block = document.querySelector(`.feedback`);
     let sides=getSides();
-    let oppositeSides=[getOpposite(sides[0]),getOpposite(sides[1])];
     let position=getPosition();
     block.removeAttribute(`style`);
     block.classList.remove(`start`);
@@ -37,11 +37,4 @@ function getPosition(){
     let pos2 = getRndInteger(-300,-500);
 
     return [pos1,pos2];
-}
-
-function getOpposite(side){
-    if (side === `bottom`) return `top`;
-    if (side === `top`) return `bottom`;
-    if (side === `left`) return `right`;
-    if (side === `right`) return `left`;
 }

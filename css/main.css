@@ -229,3 +229,9 @@ button:hover{
 p{
     color: #7dc0ce;
 }
+.logbase, .log-choice{
+    position: absolute;
+    background-color: snow;
+    bottom: -20px;
+    right: -20px;
+}
