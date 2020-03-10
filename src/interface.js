@@ -11,8 +11,8 @@ function createInterface() {
     let message = createElem(`input`, [`message`], `.calculator`, ``, ``);
     message.setAttribute(`readonly`,`readonly`);
 
-    let info1 = createElem(`span`, [`left-info`], `.calculator`, `Information`);
-    let info2 = createElem(`span`, [`right-info`], `.calculator`, `Information`);
+    let info1 = createElem(`span`, [`left-info`], `.calculator`, `Information`,``);
+    let info2 = createElem(`span`, [`right-info`], `.calculator`, `Information`,``);
     info1.addEventListener(`mousedown`, showInfo);
     info2.addEventListener(`mousedown`, showInfo);
 }
