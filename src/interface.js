@@ -29,6 +29,7 @@ function createElem(elem, classNames, parentClassName, text, index, func) {
 }
 
 function createButtons(){
+    let btn = `button`;
     for (let i = 0; i < 10; i++) createElem(`button`, [`number${i}`], `.calculator`, `${i}`, i, checkInput);
     for (let i = 0; i < operators.length; i++) createElem(`button`, [`operation${i}`, `operations`], `.calculator`, `${operators[i]}`, i, checkInput);
     createElem(`button`, [`e`], `.calculator`, `e`, ``, checkInput);
@@ -48,7 +49,7 @@ function createButtons(){
 
 function showInfo(e) {
     if (this.classList.contains(`info1`)) {
-        let text = `<ul>Доступные операции: <li>"(a+b)" - сложение</li><li>"(a-b)" - вычитание</li><li>"(a*b)" - умножение</li><li>"(a/b)" - деление</li><li>"(a^b)" - возведение в степень</li><li>"сos(rad)" - косинус</li><li>"sin(rad)" - синус</li><li>"EXP(a)" - экспонента</li><li>"log(a)n" - натуральный логарифм (по основанию <i>e</i>)</li><li>"log(a)d" - десятичный логарифм (по основанию 10)</li><li>"log(a)b" - логарифм по основанию b, b - вещественное число: b > 0 и b ≠ 1 "log(8)2 = 3"</li><li>Основание b можно ввести только в виде целого числа или числа с плавающей точкой</li><li>Аргумент логарифма (a) должен быть > 0</li></ul>`;
+        let text = `<ul>Доступные операции: <li>"(a+b)" - сложение</li><li>"(a-b)" - вычитание</li><li>"(a*b)" - умножение</li><li>"(a/b)" - деление</li><li>"(a^b)" - возведение в степень</li><li>"сos(rad)" - косинус</li><li>"sin(rad)" - синус</li><li>"EXP(a)" - экспонента</li><li>"log(a)n" - натуральный логарифм (по основанию <i>e</i>)</li><li>"log(a)d" - десятичный логарифм (по основанию 10)</li><li>"log(a)b" - логарифм по основанию b, b - вещественное число: b > 0 и b ≠ 1<br>Пример: "log(8)2 = 3"</li><li>Основание b можно ввести только в виде целого числа или числа с плавающей точкой</li><li>Аргумент логарифма (a) > 0</li></ul>`;
         setInfo(this, `show1`, text);
     }
     else {
@@ -61,7 +62,7 @@ function setInfo(item, className, str) {
     item.classList.toggle(className);
     if (item.classList.contains(className)) {
         item.textContent=``;
-        setTimeout(() => { item.innerHTML = str; }, 400);
+        setTimeout(() => { item.innerHTML = str; }, 500);
     }
     else item.textContent = `Information`;
 }
@@ -111,5 +112,5 @@ function returnValue(e) {
 
 //Проверка числа для кнопки сохранения
 function checkValue(text) {
-    return /(^-?\d+\.?\d*$)|(^-?\d+\.?\d*e[+-]\d+$)/.test(text);
+    return /(^\-?\d+\.?\d*$)|(^-?\d+\.?\d*e[\+\-]\d+$)/.test(text);
 }

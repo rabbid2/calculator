@@ -20,12 +20,18 @@ let side = {
 }
 let jump = true;
 
-if (windowWidth > windowHeight && windowHeight - 700 > jumpWidth) window.addEventListener(`DOMContentLoaded`, runRabbid);
+if (windowWidth > windowHeight && windowHeight - 700 > jumpWidth) { 
+    window.addEventListener(`DOMContentLoaded`, runRabbid);
+}
 
 function runRabbid(e) {
     let rabbid = createElem(`button`, [`rabbid`], `body`, ``, ``, showContacts);
     rabbid.innerHTML = `<img src = src/rabbid.png alt = 'rabbid-logo'>`;
-    rabbid.setAttribute(`style`, `top: ${windowHeight}px; left: ${windowWidth}px; rotate: 0deg; display: block;`);
+    rabbid.setAttribute(`style`, `top: ${windowHeight}px; left: ${windowWidth}px;
+                                 -webkit-transform: rotate(90deg); 
+                                 -ms-transform: rotate(90deg); 
+                                 transform: rotate(90deg); 
+                                 rotate:(90deg); display: block;`);
     setInterval(move, 200);
 }
 
@@ -49,9 +55,11 @@ function moveDown() {
 
 function step(rabbid, coords) {
     if (jump) jump = false;
-    rabbid.style.top = coords.top + side.y + `px`;
-    rabbid.style.left = coords.left + side.x + `px`;
-    rabbid.style.rotate = side.rotate + `deg`;
+    rabbid.setAttribute(`style`, `top: ${coords.top + side.y}px; left: ${coords.left + side.x}px;
+                                -webkit-transform: rotate(${side.rotate}deg); 
+                                -ms-transform: rotate(${side.rotate}deg); 
+                                transform: rotate(${side.rotate}deg); 
+                                rotate:(${side.rotate}deg); display: block;`);
 }
 
 function getCoords(elem) {
