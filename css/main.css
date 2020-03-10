@@ -99,7 +99,7 @@ button {
 }
 
 .left-info, .right-info {
-    padding: 1.8vw 1.04vw;
+    padding: 1.8vw 1.3vw;
     border: 0;
     width: 5.21vw;
     height: 5.21vw;
@@ -107,7 +107,7 @@ button {
     -webkit-transition: all .6s ease;
          -o-transition: all .6s ease;
             transition: all .6s ease;
-    font-size: 0.9vw;
+    font-size: 16px;
     text-align: center;
     color: #fb8e7e;
     line-height: 1.5vw;
@@ -146,7 +146,7 @@ button {
     border-bottom: 5px solid #fb8e7e;
     color: #323c4e;
     text-align: left;
-    font-size: 14.4px;
+    font-size: 14.7px;
     line-height: 2em;
 }
 
