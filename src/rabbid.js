@@ -1,9 +1,9 @@
 //Прыгающий кролик-кнопка
-const jumpHeight = 30;
+const jumpHeight = 40;
 const jumpWidth = 35;
 const rabbidSize = 50;
 const padding = 4.6;
-const requiredWidth = Math.max(jumpWidth, rabbidSize);
+const requiredWidth = Math.max(jumpWidth, rabbidSize) + padding + 1;
 const windowHeight = document.documentElement.clientHeight - rabbidSize - padding;
 const windowWidth = document.documentElement.clientWidth - rabbidSize - padding;
 let side = {
@@ -26,13 +26,13 @@ if (windowWidth > windowHeight && windowHeight - 700 > jumpWidth) {
 
 function runRabbid(e) {
     let rabbid = createElem(`button`, [`rabbid`], `body`, ``, ``, showContacts);
-    rabbid.innerHTML = `<img src = src/rabbid.png alt = 'rabbid-logo'>`;
+    rabbid.innerHTML = `<img src = img/rabbid.png alt = 'rabbid-logo'>`;
     rabbid.setAttribute(`style`, `top: ${windowHeight}px; left: ${windowWidth}px;
                                  -webkit-transform: rotate(90deg); 
                                  -ms-transform: rotate(90deg); 
                                  transform: rotate(90deg); 
                                  rotate:(90deg); display: block;`);
-    setInterval(move, 200);
+    setInterval(move, 250);
 }
 
 function move() {
@@ -72,7 +72,7 @@ function getCoords(elem) {
 }
 
 function setSide(rabbid, coords) {
-    if (coords.top <= requiredWidth && coords.left <=requiredWidth) {
+    if (coords.top <= requiredWidth && coords.left <= requiredWidth) {
         if (side.name !== `top`) setStartPosition(rabbid, `top`);
         side.setSide(`top`, jumpWidth, jumpHeight, 180);
     }
@@ -124,12 +124,12 @@ function showContacts(e) {
 
     let telegram = createElem(`button`, [`contact`, `telegram`], `.contacts`, ``, `l`, showText);
     let gitHub = createElem(`a`, [`contact`], `.contacts`, ``, `h`);
-    let gmail = createElem(`button`, [`contact`, `gmail`], `.contacts`, ``, `l`, showText);
+    let gmail = createElem(`button`, [`contact`, `mail`], `.contacts`, ``, `l`, showText);
     gitHub.setAttribute(`href`, `https://github.com/rabbid2/calculator`);
 
-    gitHub.innerHTML = `<img class = 'icon' src = 'src/github.png' alt = 'GitHub'>`;
-    telegram.innerHTML = `<img class = 'icon' src = 'src/telegram.png' alt = 'Telegram'>`;
-    gmail.innerHTML = `<img class = 'icon' src = 'src/gmail.png' alt = 'Gmail'>`;
+    gitHub.innerHTML = `<img class = 'icon' src = 'img/githubwhite.png' alt = 'GitHub'>`;
+    telegram.innerHTML = `<img class = 'icon' src = 'img/telegramwhite.png' alt = 'Telegram'>`;
+    gmail.innerHTML = `<img class = 'icon' src = 'img/mailwhite.png' alt = 'Gmail'>`;
 }
 
 function showText(e) {
