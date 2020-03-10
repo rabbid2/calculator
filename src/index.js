@@ -419,11 +419,11 @@ function power(a, b) {
 }
 
 function cos(rad) {
-    return round(Math.cos(rad));
+    return +(Math.cos(rad)).toFixed(14);
 }
 
 function sin(rad) {
-    return round(Math.sin(rad));
+    return +(Math.sin(rad)).toFixed(14);
 }
 
 function exp(a) {
