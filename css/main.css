@@ -146,8 +146,8 @@ button {
     border-bottom: 5px solid #fb8e7e;
     color: #323c4e;
     text-align: left;
-    font-size: 0.76vw;
-    line-height: 1.5vw;
+    font-size: 14.4px;
+    line-height: 2em;
 }
 
 .show-left-info {
