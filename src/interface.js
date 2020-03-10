@@ -11,8 +11,8 @@ function createInterface() {
     let message = createElem(`input`, [`message`], `.calculator`, ``, ``);
     message.setAttribute(`readonly`,`readonly`);
 
-    let info1 = createElem(`span`, [`info1`], `.calculator`, `Information`);
-    let info2 = createElem(`span`, [`info2`], `.calculator`, `Information`);
+    let info1 = createElem(`span`, [`left-info`], `.calculator`, `Information`);
+    let info2 = createElem(`span`, [`right-info`], `.calculator`, `Information`);
     info1.addEventListener(`mousedown`, showInfo);
     info2.addEventListener(`mousedown`, showInfo);
 }
@@ -48,13 +48,13 @@ function createButtons(){
 }
 
 function showInfo(e) {
-    if (this.classList.contains(`info1`)) {
+    if (this.classList.contains(`left-info`)) {
         let text = `<ul>Доступные операции: <li>"(a+b)" - сложение</li><li>"(a-b)" - вычитание</li><li>"(a*b)" - умножение</li><li>"(a/b)" - деление</li><li>"(a^b)" - возведение в степень</li><li>"сos(rad)" - косинус</li><li>"sin(rad)" - синус</li><li>"EXP(a)" - экспонента</li><li>"log(a)n" - натуральный логарифм (по основанию <i>e</i>)</li><li>"log(a)d" - десятичный логарифм (по основанию 10)</li><li>"log(a)b" - логарифм по основанию b, b - вещественное число: b > 0 и b ≠ 1<br>Пример: "log(8)2 = 3"</li><li>Основание b можно ввести только в виде целого числа или числа с плавающей точкой</li><li>Аргумент логарифма (a) > 0</li></ul>`;
-        setInfo(this, `show1`, text);
+        setInfo(this, `show-left-info`, text);
     }
     else {
         let text = `<ul><li>Допустимый диапазон значений: от ${MIN_VALUE} до ${MAX_VALUE}</li><li>Число "π" с клавиатуры можно ввести как "p"</li><li>Формы записи чисел:<br>с плавающей точкой (1.2),<br>экспоненциальная (12e-1)</li><li>В качестве разделителя целой и дробной части принимается только "."</li><li>Взятие квадратного корня производится операцией: "^(1/2)"</li><li>Формула перевода градусов в радианы: "rad = a° * π / 180"</li></ul>Исправить введенное выражение можно только с помощью клавиатуры.<p>Будьте внимательны при написании больших выражений!</p>`
-        setInfo(this, `show2`, text);
+        setInfo(this, `show-right-info`, text);
     }
 }
 

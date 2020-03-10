@@ -36,7 +36,7 @@ body {
     grid-column-gap: 3px;
 }
 
-button, .title, .inputField, .message, .info1, .info2 {
+button, .title, .inputField, .message, .left-info, .right-info {
     font-family: "Roboto", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 20px;
     color: #242735;
@@ -98,7 +98,7 @@ button {
     font-size: 16px;
 }
 
-.info1, .info2 {
+.left-info, .right-info {
     padding: 1.8vw 1.04vw;
     border: 0;
     width: 5.21vw;
@@ -116,29 +116,29 @@ button {
        text-overflow: ellipsis;
 }
 
-.info1 {
+.left-info {
     position: absolute;
     top: 351px;
     left: -5.21vw;
 }
 
-.info1:hover {
+.left-info:hover {
     width: 10.42vw;
     left: -10.42vw;
 }
 
-.info2 {
+.right-info {
     position: absolute;
     top: 351px;
     right: -5.21vw;
 }
 
-.info2:hover {
+.right-info:hover {
     width: 10.42vw;
     right: -10.42vw;
 }
 
-.show1, .show2 {
+.show-left-info, .show-right-info {
     height: 656px;
     width: 15.625vw;
     padding: 1.04vw 1.56vw;
@@ -146,31 +146,32 @@ button {
     border-bottom: 5px solid #fb8e7e;
     color: #323c4e;
     text-align: left;
-    font-size: 14.6px;
+    font-size: 0.76vw;
     line-height: 1.5vw;
 }
 
-.show1 {
+.show-left-info {
     top: 44px;
     left: -15.625vw;
 }
 
-.show1:hover {
+.show-left-info:hover {
     width: 15.625vw;
     top: 44px;
     left: -15.625vw;
 }
 
-.show2 {
+.show-right-info {
     top: 44px;
     right: -15.625vw;
 }
 
-.show2:hover {
+.show-right-info:hover {
     width: 15.625vw;
     top: 44px;
     right: -15.625vw;
 }
+
 .error {
     border: 5px solid #fa6e4f;
 }
@@ -233,11 +234,11 @@ button {
     position: absolute;
     border: 0;
     left: 44.52w;
-    bottom: 3.9vw;
+    bottom: 90px;
 }
 
 .contact {
-    padding: 0 1.04vw;
+    padding: 0 0.78vw;
     background-color: transparent;
     border: 0;
     height: 3.39vw;
@@ -270,12 +271,12 @@ button {
 }
 
 .text-t {
-    left: -40px;
+    left: -50px;
     bottom: -15px;
 }
 
 .text-g {
-    right: -45px;
+    right: -55px;
 }
 
 .show-text {
@@ -302,36 +303,56 @@ button:focus {
 
 @media screen and (max-width: 1200px) {
     .calculator {
-        height: 50%;
+        height: 600px;
+        width: 90%;
+        border: 0;
     }
 
     .clear,.return,.save {
-        top: 26%;
-        font-size: 16px;
+        top: 24%;
+        font-size: 24px;
+        right: 5px;
+    }
+    .return {
+        right: 80px;
+    }
+    .save {
+        right: 240px;
     }
 
-    .info1,.info2,.info1:hover, .info2:hover {
-        top: 579px;
+    button, .inputField {
+        font-size: 26px;
+    }
+
+    .message {
+        font-size: 20px;
+    }
+
+    .left-info , .right-info, .left-info :hover, .right-info:hover {
+        top: 600px;
         left: 0;
         width: 50%;
-        height: 20px;
+        height: 100px;
+        padding: 35px;
+        font-size: 19px;
     }
 
-    .info2, .info2:hover {
+    .right-info, .right-info:hover {
         left: 50%;
     }
 
-    .show1, .show2, .show1:hover, .show2:hover {
-        top: 579px;
+    .show-left-info , .show-right-info, .show-left-info:hover, .show-right-info:hover {
+        top: 600px;
         left: 0;
         width: 50%;
-        height: 270px;
-        font-size: 11px;
-        line-height: 11px;
+        height: 800px;
+        font-size: 24px;
+        line-height: 36px;
         border-top: 0;
+        padding: 20px;
     }
 
-    .show2, .show2:hover {
+    .show-right-info, .show-right-info:hover {
         left: 50%;
     }
 }
